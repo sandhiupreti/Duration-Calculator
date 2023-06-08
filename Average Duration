@@ -1,0 +1,192 @@
+def calculate_travel_time(distance, speed):
+    time = distance / speed
+    return time
+
+def calculate_distance(planet1, planet2):
+    distance = abs(average_distances[planet1][planet2])
+    return distance
+
+def save_travel_time(planet1, planet2, mode_of_transport, travel_time):
+    units = "seconds"
+    if travel_time >= 60:
+        if travel_time >= 3600:
+            travel_time /= 3600
+            units = "hours"
+            if travel_time >= 24:
+                travel_time /= 24
+                units = "days"
+                if travel_time >= 7:
+                    travel_time /= 7
+                    units = "weeks"
+                    if travel_time >= 52:
+                        travel_time /= 52
+                        units = "years"
+        else:
+            travel_time /= 60
+            units = "minutes"
+
+    with open("travel_time.txt", "a") as file:
+        file.write(f"From {planet1} to {planet2} using {mode_of_transport}: {round(travel_time, 2)} {units}\n")
+
+def save_distance(planet1, planet2, distance):
+    with open("travel_time.txt", "a") as file:
+        file.write(f"Distance between {planet1} and {planet2}: {distance} miles\n")
+
+def display_travel_time():
+    with open("travel_time.txt", "r") as file:
+        print("Here is a summary of your Calculations:")
+        print(file.read())
+
+def clear_travel_time_file():
+    with open("travel_time.txt", "w") as file:
+        file.write("")
+
+average_distances = {
+    "Mercury": {
+        "Venus": 25724767,
+        "Earth": 48160893,
+        "Mars": 78479320,
+        "Jupiter": 365394433,
+        "Saturn": 746971922,
+        "Uranus": 1625111307,
+        "Neptune": 2526978241,
+        "Sun": 36000000
+    },
+    "Venus": {
+        "Mercury": 25724767,
+        "Earth": 25724767,
+        "Mars": 49447271,
+        "Jupiter": 346848640,
+        "Saturn": 700392221,
+        "Uranus": 1520991083,
+        "Neptune": 2465134744,
+        "Sun": 67240000
+    },
+    "Earth": {
+        "Mercury": 48160893,
+        "Venus": 25724767,
+        "Mars": 48678219,
+        "Jupiter": 396118607,
+        "Saturn": 792248270,
+        "Uranus": 1692662530,
+        "Neptune": 2703959960,
+        "Sun": 92960000
+    },
+    "Mars": {
+        "Mercury": 78479320,
+        "Venus": 49447271,
+        "Earth": 48678219,
+        "Jupiter": 327491982,
+        "Saturn": 679957806,
+        "Uranus": 1496137581,
+        "Neptune": 2444727853,
+        "Sun": 141600000
+    },
+    "Jupiter": {
+        "Mercury": 365394433,
+        "Venus": 346848640,
+        "Earth": 396118607,
+        "Mars": 327491982,
+        "Saturn": 402811491,
+        "Uranus": 995085625,
+        "Neptune": 1896610000,
+        "Sun": 484000000
+    },
+    "Saturn": {
+        "Mercury": 746971922,
+        "Venus": 700392221,
+        "Earth": 792248270,
+        "Mars": 679957806,
+        "Jupiter": 402811491,
+        "Uranus": 953242186,
+        "Neptune": 1349519350,
+        "Sun": 888200000
+    },
+    "Uranus": {
+        "Mercury": 1625111307,
+        "Venus": 1520991083,
+        "Earth": 1692662530,
+        "Mars": 1496137581,
+        "Jupiter": 995085625,
+        "Saturn": 953242186,
+        "Neptune": 658539473,
+        "Sun": 1784000000
+    },
+    "Neptune": {
+        "Mercury": 2526978241,
+        "Venus": 2465134744,
+        "Earth": 2703959960,
+        "Mars": 2444727853,
+        "Jupiter": 1896610000,
+        "Saturn": 1349519350,
+        "Uranus": 658539473,
+        "Sun": 2793000000
+    },
+    "Sun": {
+        "Mercury": 36000000,
+        "Venus": 67240000,
+        "Earth": 92960000,
+        "Mars": 141600000,
+        "Jupiter": 484000000,
+        "Saturn": 888200000,
+        "Uranus": 1784000000,
+        "Neptune": 2793000000
+    }
+}
+
+
+average_speeds = {
+    "average": 4.9,
+    "lightspeed": 186282
+}
+
+while True:
+    planet1 = input("Enter the name of the first planet: ")
+    planet2 = input("Enter the name of the second planet: ")
+    mode_of_transport = input("Enter the mode of transportation (average or lightspeed): ")
+
+    if planet1 in average_distances and planet2 in average_distances[planet1]:
+        distance = calculate_distance(planet1, planet2)
+
+        if mode_of_transport in average_speeds:
+            speed = average_speeds[mode_of_transport]
+            travel_time = calculate_travel_time(distance, speed)
+
+            save_travel_time(planet1, planet2, mode_of_transport, travel_time)
+
+            if travel_time >= 60:
+                if travel_time >= 3600:
+                    travel_time /= 3600
+                    units = "hours"
+                    if travel_time >= 24:
+                        travel_time /= 24
+                        units = "days"
+                        if travel_time >= 7:
+                            travel_time /= 7
+                            units = "weeks"
+                            if travel_time >= 52:
+                                travel_time /= 52
+                                units = "years"
+                    print(f"It would take approximately {round(travel_time, 1)} {units} to travel from {planet1} to {planet2} using {mode_of_transport}.")
+                else:
+                    travel_time /= 60
+                    units = "minutes"
+                    print(f"It would take approximately {round(travel_time, 1)} {units} to travel from {planet1} to {planet2} using {mode_of_transport}.")
+            else:
+                print(f"It would take approximately {round(travel_time)} seconds to travel from {planet1} to {planet2} using {mode_of_transport}.")
+        else:
+            print("Invalid mode of transportation. Please choose either 'average' or 'lightspeed'.")
+
+        show_distance = input("Do you want to see the distance between the planets? (yes/no): ")
+        if show_distance.lower() == "yes":
+            save_distance(planet1, planet2, distance)
+            print(f"The distance between {planet1} and {planet2} is approximately {distance} miles.")
+
+        choice = input("Do you want to calculate travel time for more planet combinations? (yes/no): ")
+        if choice.lower() != "yes":
+            break
+    else:
+        print("Invalid planet names entered.")
+
+display_travel_time()
+clear_travel_time_file()
